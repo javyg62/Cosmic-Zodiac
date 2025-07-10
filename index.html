@@ -1,1 +1,347 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Zodiac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .zodiac-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #7e22ce 50%, #ec4899 100%);
+        }
+        .sign-card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .sign-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .constellation {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        .star {
+            animation: twinkle 3s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-900 text-white font-sans">
+    <!-- Star background -->
+    <div class="fixed inset-0 overflow-hidden">
+        <div class="absolute inset-0 bg-black"></div>
+        <div id="stars-container" class="absolute inset-0"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent zodiac-gradient">
+                Cosmic Zodiac Guide
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+                Discover your zodiac sign, personality traits, and celestial insights based on your birth date.
+            </p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Zodiac Form -->
+            <div class="lg:col-span-1 bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-700">
+                <h2 class="text-2xl font-bold mb-6 text-center">Find Your Sign</h2>
+                <form id="zodiac-form" class="space-y-6">
+                    <div>
+                        <label for="birth-month" class="block text-sm font-medium text-gray-300 mb-1">Birth Month</label>
+                        <select id="birth-month" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="birth-day" class="block text-sm font-medium text-gray-300 mb-1">Birth Day</label>
+                        <input type="number" id="birth-day" min="1" max="31" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Day (1-31)">
+                    </div>
+                    <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 rounded-lg font-medium transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-star mr-2"></i> Reveal My Zodiac
+                    </button>
+                </form>
+
+                <!-- Quick Zodiac Reference -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-3 text-center">Zodiac Calendar</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♈ Aries: Mar 21 - Apr 19</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♉ Taurus: Apr 20 - May 20</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♊ Gemini: May 21 - Jun 20</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♋ Cancer: Jun 21 - Jul 22</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♌ Leo: Jul 23 - Aug 22</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♍ Virgo: Aug 23 - Sep 22</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♎ Libra: Sep 23 - Oct 22</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♏ Scorpio: Oct 23 - Nov 21</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♐ Sagittarius: Nov 22 - Dec 21</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♑ Capricorn: Dec 22 - Jan 19</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♒ Aquarius: Jan 20 - Feb 18</div>
+                        <div class="bg-gray-700 bg-opacity-50 p-2 rounded">♓ Pisces: Feb 19 - Mar 20</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="lg:col-span-2">
+                <div id="result-container" class="bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-700 min-h-96 flex items-center justify-center">
+                    <div id="initial-message" class="text-center py-12">
+                        <i class="fas fa-moon-stars text-5xl mb-4 text-purple-400"></i>
+                        <h3 class="text-xl font-semibold mb-2">Your Cosmic Journey Awaits</h3>
+                        <p class="text-gray-300 max-w-md mx-auto">
+                            Enter your birth date to discover your zodiac sign and receive personalized celestial insights.
+                        </p>
+                    </div>
+                    <div id="zodiac-result" class="hidden w-full">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- All Zodiac Signs -->
+                <div class="mt-8">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Explore All Zodiac Signs</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        <!-- Zodiac signs will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create stars
+            createStars();
+            
+            // Zodiac data
+            const zodiacData = [
+                { name: 'Aries', symbol: '♈', dates: 'Mar 21 - Apr 19', element: 'Fire', planet: 'Mars', traits: 'Courageous, determined, confident, enthusiastic, optimistic, honest, passionate', color: '#FF0000', icon: 'fas fa-fire' },
+                { name: 'Taurus', symbol: '♉', dates: 'Apr 20 - May 20', element: 'Earth', planet: 'Venus', traits: 'Reliable, patient, practical, devoted, responsible, stable', color: '#00FF00', icon: 'fas fa-leaf' },
+                { name: 'Gemini', symbol: '♊', dates: 'May 21 - Jun 20', element: 'Air', planet: 'Mercury', traits: 'Gentle, affectionate, curious, adaptable, ability to learn quickly and exchange ideas', color: '#FFFF00', icon: 'fas fa-comments' },
+                { name: 'Cancer', symbol: '♋', dates: 'Jun 21 - Jul 22', element: 'Water', planet: 'Moon', traits: 'Tenacious, highly imaginative, loyal, emotional, sympathetic, persuasive', color: '#0000FF', icon: 'fas fa-water' },
+                { name: 'Leo', symbol: '♌', dates: 'Jul 23 - Aug 22', element: 'Fire', planet: 'Sun', traits: 'Creative, passionate, generous, warm-hearted, cheerful, humorous', color: '#FFA500', icon: 'fas fa-sun' },
+                { name: 'Virgo', symbol: '♍', dates: 'Aug 23 - Sep 22', element: 'Earth', planet: 'Mercury', traits: 'Loyal, analytical, kind, hardworking, practical', color: '#808000', icon: 'fas fa-seedling' },
+                { name: 'Libra', symbol: '♎', dates: 'Sep 23 - Oct 22', element: 'Air', planet: 'Venus', traits: 'Cooperative,diplomatic, gracious, fair-minded, social', color: '#FFC0CB', icon: 'fas fa-balance-scale' },
+                { name: 'Scorpio', symbol: '♏', dates: 'Oct 23 - Nov 21', element: 'Water', planet: 'Pluto', traits: 'Resourceful, brave, passionate, stubborn, a true friend', color: '#800080', icon: 'fas fa-scorpion' },
+                { name: 'Sagittarius', symbol: '♐', dates: 'Nov 22 - Dec 21', element: 'Fire', planet: 'Jupiter', traits: 'Generous, idealistic, great sense of humor', color: '#000080', icon: 'fas fa-arrow-right' },
+                { name: 'Capricorn', symbol: '♑', dates: 'Dec 22 - Jan 19', element: 'Earth', planet: 'Saturn', traits: 'Responsible, disciplined, self-control, good managers', color: '#A52A2A', icon: 'fas fa-mountain' },
+                { name: 'Aquarius', symbol: '♒', dates: 'Jan 20 - Feb 18', element: 'Air', planet: 'Uranus', traits: 'Progressive, original, independent, humanitarian', color: '#00FFFF', icon: 'fas fa-cloud' },
+                { name: 'Pisces', symbol: '♓', dates: 'Feb 19 - Mar 20', element: 'Water', planet: 'Neptune', traits: 'Compassionate, artistic, intuitive, gentle, wise, musical', color: '#FF00FF', icon: 'fas fa-fish' }
+            ];
+
+            // Populate zodiac signs grid
+            const zodiacGrid = document.querySelector('.grid-cols-2.sm\\:grid-cols-3.md\\:grid-cols-4');
+            zodiacData.forEach(sign => {
+                const signElement = document.createElement('div');
+                signElement.className = 'sign-card bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-lg p-4 text-center cursor-pointer hover:bg-gray-700 transition duration-300 border border-gray-700';
+                signElement.innerHTML = `
+                    <div class="text-3xl mb-2" style="color: ${sign.color}">${sign.symbol}</div>
+                    <h3 class="font-semibold">${sign.name}</h3>
+                    <p class="text-xs text-gray-400">${sign.dates}</p>
+                `;
+                signElement.addEventListener('click', () => displayZodiacResult(sign));
+                zodiacGrid.appendChild(signElement);
+            });
+
+            // Form submission
+            const zodiacForm = document.getElementById('zodiac-form');
+            zodiacForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const month = parseInt(document.getElementById('birth-month').value);
+                const day = parseInt(document.getElementById('birth-day').value);
+                
+                if (!month || !day || day < 1 || day > 31) {
+                    alert('Please enter a valid birth date');
+                    return;
+                }
+                
+                const zodiacSign = getZodiacSign(month, day);
+                displayZodiacResult(zodiacSign);
+            });
+
+            // Get zodiac sign based on date
+            function getZodiacSign(month, day) {
+                if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return zodiacData[0]; // Aries
+                if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return zodiacData[1]; // Taurus
+                if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return zodiacData[2]; // Gemini
+                if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return zodiacData[3]; // Cancer
+                if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return zodiacData[4]; // Leo
+                if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return zodiacData[5]; // Virgo
+                if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return zodiacData[6]; // Libra
+                if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return zodiacData[7]; // Scorpio
+                if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return zodiacData[8]; // Sagittarius
+                if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return zodiacData[9]; // Capricorn
+                if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return zodiacData[10]; // Aquarius
+                if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return zodiacData[11]; // Pisces
+            }
+
+            // Display zodiac result
+            function displayZodiacResult(sign) {
+                document.getElementById('initial-message').classList.add('hidden');
+                document.getElementById('zodiac-result').classList.remove('hidden');
+                
+                const resultElement = document.getElementById('zodiac-result');
+                resultElement.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-shrink-0 text-center">
+                            <div class="text-8xl mb-4" style="color: ${sign.color}">${sign.symbol}</div>
+                            <h2 class="text-3xl font-bold mb-1">${sign.name}</h2>
+                            <p class="text-gray-400 mb-4">${sign.dates}</p>
+                            <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-4" style="background-color: ${sign.color}20; border-color: ${sign.color}">
+                                <i class="${sign.icon} mr-2"></i> ${sign.element} Element
+                            </div>
+                            <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style="background-color: ${sign.color}20; border-color: ${sign.color}">
+                                <i class="fas fa-globe mr-2"></i> Ruled by ${sign.planet}
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-semibold mb-3">Personality Traits</h3>
+                            <p class="mb-6">${sign.traits}.</p>
+                            
+                            <h3 class="text-xl font-semibold mb-3">Today's Horoscope</h3>
+                            <p class="mb-6">${generateHoroscope(sign.name)}</p>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-700 bg-opacity-50 p-3 rounded-lg">
+                                    <h4 class="font-medium mb-1">Lucky Number</h4>
+                                    <p class="text-2xl font-bold" style="color: ${sign.color}">${Math.floor(Math.random() * 9) + 1}</p>
+                                </div>
+                                <div class="bg-gray-700 bg-opacity-50 p-3 rounded-lg">
+                                    <h4 class="font-medium mb-1">Compatibility</h4>
+                                    <p class="text-lg">${getCompatibility(sign.name)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Scroll to result
+                resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // Generate random horoscope
+            function generateHoroscope(sign) {
+                const horoscopes = {
+                    Aries: [
+                        "Today is a day for bold action. Your energy is high, and others will notice your confidence.",
+                        "Unexpected opportunities may arise. Trust your instincts when making quick decisions."
+                    ],
+                    Taurus: [
+                        "Focus on stability today. Your practical nature will help you make solid progress.",
+                        "Financial matters look promising. Consider long-term investments rather than quick gains."
+                    ],
+                    Gemini: [
+                        "Your communication skills are at their peak today. Important conversations will go well.",
+                        "A social day awaits. New connections may lead to exciting opportunities."
+                    ],
+                    Cancer: [
+                        "Emotional clarity comes today. Trust your intuition in personal matters.",
+                        "Home and family take center stage. Nurture your closest relationships."
+                    ],
+                    Leo: [
+                        "Your charisma is shining bright today. Use this energy to inspire others.",
+                        "Creative projects will flourish. Don't hold back your unique ideas."
+                    ],
+                    Virgo: [
+                        "Attention to detail pays off today. Your analytical skills are particularly sharp.",
+                        "Health and wellness should be your focus. Small improvements make a big difference."
+                    ],
+                    Libra: [
+                        "Relationships are highlighted today. Seek balance in all your interactions.",
+                        "Your sense of fairness will guide you well in any negotiations."
+                    ],
+                    Scorpio: [
+                        "Deep insights come to you today. Look beneath the surface of situations.",
+                        "Transformation is possible now. Release what no longer serves you."
+                    ],
+                    Sagittarius: [
+                        "Adventure calls today. Be open to new experiences and perspectives.",
+                        "Your optimism is contagious. Share your positive outlook with others."
+                    ],
+                    Capricorn: [
+                        "Career matters take center stage. Your disciplined approach brings results.",
+                        "Long-term planning is favored today. Set practical goals for the future."
+                    ],
+                    Aquarius: [
+                        "Innovative ideas flow today. Don't be afraid to think outside the box.",
+                        "Social causes may inspire you. Your unique perspective can help others."
+                    ],
+                    Pisces: [
+                        "Your intuition is strong today. Pay attention to dreams and subtle signs.",
+                        "Creative expression flows easily. Artistic pursuits are favored now."
+                    ]
+                };
+                
+                return horoscopes[sign][Math.floor(Math.random() * horoscopes[sign].length)];
+            }
+
+            // Get compatibility
+            function getCompatibility(sign) {
+                const compatibility = {
+                    Aries: "Leo, Sagittarius",
+                    Taurus: "Virgo, Capricorn",
+                    Gemini: "Libra, Aquarius",
+                    Cancer: "Scorpio, Pisces",
+                    Leo: "Aries, Sagittarius",
+                    Virgo: "Taurus, Capricorn",
+                    Libra: "Gemini, Aquarius",
+                    Scorpio: "Cancer, Pisces",
+                    Sagittarius: "Aries, Leo",
+                    Capricorn: "Taurus, Virgo",
+                    Aquarius: "Gemini, Libra",
+                    Pisces: "Cancer, Scorpio"
+                };
+                return compatibility[sign];
+            }
+
+            // Create star background
+            function createStars() {
+                const container = document.getElementById('stars-container');
+                const starCount = 200;
+                
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star absolute bg-white rounded-full';
+                    
+                    // Random size
+                    const size = Math.random() * 3;
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    
+                    // Random position
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    
+                    // Random animation delay
+                    star.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    container.appendChild(star);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
